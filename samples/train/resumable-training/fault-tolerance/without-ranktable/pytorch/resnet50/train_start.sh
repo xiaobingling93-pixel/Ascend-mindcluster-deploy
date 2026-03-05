@@ -15,6 +15,8 @@ export PYTHONUNBUFFERED=1
 
 # env for breakpoint ckpt
 export RESUME_MODE_ENABLE=1
+# env for resumable training
+export MS_ENABLE_RECOVERY=1
 
 function check_npu_availability {
     i=0
