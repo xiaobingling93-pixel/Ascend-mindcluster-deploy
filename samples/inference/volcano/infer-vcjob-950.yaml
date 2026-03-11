@@ -1,0 +1,52 @@
+apiVersion: batch.volcano.sh/v1alpha1
+kind: Job
+metadata:
+  name: mindx-infer-test
+  namespace: vcjob                      # Select a proper namespace based on the site requirements.
+  labels:
+    ring-controller.atlas: ascend-npu
+    fault-scheduling: "force"
+spec:
+  minAvailable: 1                       # The value of minAvailable is 1 in a single-node scenario, only set as 1 when infer task
+  schedulerName: volcano                # Use the Volcano scheduler to schedule jobs.
+  policies:
+    - event: PodEvicted
+      action: RestartJob
+  maxRetry: 3
+  queue: default
+  tasks:
+  - name: "default-test"
+    replicas: 1                         # The value of replicas is 1 in a single-node scenario, only set as 1 when infer task
+    template:
+      metadata:
+        labels:
+          app: infer
+          ring-controller.atlas: ascend-npu
+      spec:
+        automountServiceAccountToken: false
+        containers:
+          - image: infer_image:latest             # Inference image, which can be modified.
+            imagePullPolicy: IfNotPresent
+            name: infer
+            command: ["/bin/bash", "-c", "./infer.sh"]
+            env:
+            # ASCEND_VISIBLE_DEVICES env variable is used by ascend-docker-runtime when in the whole card scheduling scene with volcano scheduler. please delete it when in the static or dynamic vNPU scheduling scene or without volcano.
+            - name: ASCEND_VISIBLE_DEVICES
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.annotations['huawei.com/npu']               # The value must be the same as resources.requests.
+            resources:
+              requests:
+                huawei.com/npu: 1
+              limits:
+                huawei.com/npu: 1          # The value must be consistent with that in requests.
+            volumeMounts:
+              - name: localtime                  # The container time must be the same as the host time.
+                mountPath: /etc/localtime
+        nodeSelector:
+          host-arch: huawei-arm                  # Configure the label based on the actual job.
+        volumes:
+        - name: localtime
+          hostPath:
+            path: /etc/localtime
+        restartPolicy: OnFailure

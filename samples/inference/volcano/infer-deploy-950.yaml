@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: resnetinfer1-1-deploy
+  labels:
+      app: infers
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: infers
+  template:
+    metadata: 
+      labels:
+         app: infers
+         host-arch: huawei-arm         # Select the os arch. If the os arch is arm, change it to huawei-x86.
+         ring-controller.atlas: ascend-npu # Add this Label, used to check job kind.
+    spec:
+      schedulerName: volcano
+      automountServiceAccountToken: false
+      nodeSelector:
+        host-arch: huawei-arm           # Select the os arch. If the os arch is x86, change it to huawei-x86.
+      containers:
+      - image: ubuntu-infer:v1                  # Inference image name
+        imagePullPolicy: IfNotPresent
+        name: resnet50infer
+        env:
+        # ASCEND_VISIBLE_DEVICES env variable is used by ascend-docker-runtime when in the whole card scheduling scene with volcano scheduler. please delete it when in the static or dynamic vNPU scheduling scene or without volcano.
+        - name: ASCEND_VISIBLE_DEVICES
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.annotations['huawei.com/npu']              
+        resources:
+          requests:
+            huawei.com/npu: 1
+          limits:
+            huawei.com/npu: 1             # The value should be the same as that of requests .
+        volumeMounts:
+        - name: slog
+          mountPath: /var/log/npu/conf/slog/    #Log path
+        - name: localtime                       #The container time must be the same as the host time.
+          mountPath: /etc/localtime
+      volumes:
+      - name: slog
+        hostPath:
+          path: /var/log/npu/conf/slog/
+      - name: localtime
+        hostPath:
+          path: /etc/localtime
