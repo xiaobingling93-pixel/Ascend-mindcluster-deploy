@@ -67,12 +67,8 @@ spec:
                   mountPath: /usr/local/Ascend/driver
                 - name: ascend-add-ons
                   mountPath: /usr/local/Ascend/add-ons
-                - name: dshm
-                  mountPath: /dev/shm
                 - name: localtime
                   mountPath: /etc/localtime
-                - name: share-device-config-dir # soft split configuration folder path
-                  mountPath: /etc/enpu/vcann-rt/
                 - name: libpreload # soft split dynamic library path
                   mountPath: /opt/enpu/vcann-rt/lib/libvruntime.so
                 - name: preload # preload configuration file path
@@ -84,16 +80,9 @@ spec:
             - name: ascend-add-ons
               hostPath:
                 path: /usr/local/Ascend/add-ons
-            - name: dshm
-              emptyDir:
-                medium: Memory
             - name: localtime
               hostPath:
                 path: /etc/localtime
-            - name: share-device-config-dir # soft split configuration folder path
-              hostPath:
-                path: /etc/enpu/vcann-rt/vnpu.vnpu-base/ # {configuration folder path}/${namespace}.${container_name}/
-                type: DirectoryOrCreate
             - name: libpreload # soft split dynamic library path
               hostPath:
                 path: /opt/enpu/vcann-rt/lib/libvruntime.so
@@ -148,12 +137,8 @@ spec:
                   mountPath: /usr/local/Ascend/driver
                 - name: ascend-add-ons
                   mountPath: /usr/local/Ascend/add-ons
-                - name: dshm
-                  mountPath: /dev/shm
                 - name: localtime
                   mountPath: /etc/localtime
-                - name: share-device-config-dir # soft split configuration folder path
-                  mountPath: /etc/enpu/vcann-rt/
                 - name: libpreload # soft split dynamic library path
                   mountPath: /opt/enpu/vcann-rt/lib/libvruntime.so
                 - name: preload # preload configuration file path
@@ -165,16 +150,9 @@ spec:
             - name: ascend-add-ons
               hostPath:
                 path: /usr/local/Ascend/add-ons
-            - name: dshm
-              emptyDir:
-                medium: Memory
             - name: localtime
               hostPath:
                 path: /etc/localtime
-            - name: share-device-config-dir # soft split configuration folder path
-              hostPath:
-                path: /etc/enpu/vcann-rt/vnpu.vnpu-base/ # {configuration folder path}/${namespace}.${container_name}/
-                type: DirectoryOrCreate
             - name: libpreload # soft split dynamic library path
               hostPath:
                 path: /opt/enpu/vcann-rt/lib/libvruntime.so
