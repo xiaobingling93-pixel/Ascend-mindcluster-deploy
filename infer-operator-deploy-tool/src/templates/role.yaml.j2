@@ -1,0 +1,129 @@
+    - name: {{ role_name }}
+      replicas: {{ role_config.instance_count | default(1) }}
+      {% if role_config.services %}
+      services:
+      {% for service in role_config.services %}
+      - name: {{ service.name }}
+        spec:
+          ports: 
+          {% for port in service.ports %}
+          - name: {{ port.name }}
+            protocol: {{ port.protocol }}
+            port: {{ port.port }}
+            targetPort: {{ port.targetPort }}
+            {% if service.type == "NodePort" and port.nodePort %}
+            nodePort: {{ port.nodePort }}
+            {% endif %}
+          {% endfor %}
+      {% endfor %}
+      {% endif %}
+      workload:
+        apiVersion: {{ role_config.api_version | default('apps/v1') }}
+        kind: {{ role_config.kind | default('StatefulSet') }}
+      spec:
+        replicas: {{ role_config.single_instance_pod_num | default(1) }}
+        selector:
+          matchLabels:
+            app: {{ job_name | default('default') }}-{{ role_name }}
+        template:
+          metadata:
+            labels:
+              app: {{ job_name | default('default') }}-{{ role_name }}
+              ring-controller.atlas: ascend-910b
+              {% if role_config.labels %}
+              {% for key, value in role_config.labels.items() %}
+              {{ key }}: {{ value }}
+              {% endfor %}
+              {% endif %} 
+            {% if role_config.annotations %}
+            annotations:
+              {% for key, value in role_config.annotations.items() %}
+              {{ key }}: {{ value }}
+              {% endfor %}
+            {% endif %}
+          spec:
+            schedulerName: volcano
+            nodeSelector:
+              accelerator-type: {{ role_config.hardware_type }}
+              {% if role_config.node_selector %}
+              {% for key, value in role_config.node_selector.items() %}
+              {{ key }}: {{ value }}
+              {% endfor %}
+              {% endif %}
+            containers:
+            - name: {{ role_name }}
+              image: {{ role_config.image }}
+              imagePullPolicy: IfNotPresent
+              env:
+              - name: POD_IP
+                valueFrom:
+                  fieldRef:
+                    fieldPath: status.podIP
+              - name: HOST_IP
+                valueFrom:
+                  fieldRef:
+                    fieldPath: status.hostIP
+              - name: POD_NAME
+                valueFrom:
+                  fieldRef:
+                    fieldPath: metadata.name
+              {% if role_config.env %}
+              {% for key, value in role_config.env.items() %}
+              - name: {{ key }}
+                value: {{ value }}
+              {% endfor %}
+              {% endif %}
+              command:
+              - /bin/bash
+              - -c
+              - |
+                export LD_LIBRARY_PATH=/usr/local/Ascend/ascend-toolkit/latest/python/site-packages/mooncake:$LD_LIBRARY_PATH
+                if command -v python3 &> /dev/null;  
+                then python3 /mnt/scripts/start.py --role {{ role_name }} --config /config/user_config.json; 
+                else python /mnt/scripts/start.py --role {{ role_name }} --config /config/user_config.json; 
+                fi
+              resources:
+                requests:
+                  {% if role_config.single_pod_npu_num is defined and role_config.single_pod_npu_num > 0 %}
+                  huawei.com/Ascend910: {{ role_config.single_pod_npu_num }}
+                  {% endif %}
+                limits:
+                  {% if role_config.single_pod_npu_num is defined and role_config.single_pod_npu_num > 0 %}
+                  huawei.com/Ascend910: {{ role_config.single_pod_npu_num }}
+                  {% endif %}
+              volumeMounts:
+              - name: data
+                mountPath: {{ model_path }}
+                readOnly: true
+              - name: config
+                mountPath: /config
+              - name: scripts
+                mountPath: /mnt/scripts
+              - name: dshm
+                mountPath: /dev/shm
+              - name: driver
+                mountPath: /usr/local/Ascend/driver
+              - name: queue-schedule
+                mountPath: /var/queue_schedule
+            volumes:
+            - name: data
+              hostPath: 
+                path: {{ model_path }}
+            - name: config
+              configMap:
+                name: {{ job_name }}-cm
+                defaultMode: 0550
+            - name: scripts
+              hostPath: 
+                path: {{ scripts_path }}
+            - name: dshm
+              emptyDir:
+                medium: Memory
+                sizeLimit: 4Gi
+            - name: driver
+              hostPath: 
+                path: /usr/local/Ascend/driver
+            - name: queue-schedule
+              hostPath: 
+                path: /var/queue_schedule
+

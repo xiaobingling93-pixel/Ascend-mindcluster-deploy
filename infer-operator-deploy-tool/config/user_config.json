@@ -1,0 +1,69 @@
+{
+    "deploy_config": {
+        "namespace": "default",
+        "job_name": "qwen",
+        "infer_service_num": 1,
+        "prefill": {
+            "hardware_type": "module-910b-8",
+            "instance_count": 1,
+            "single_instance_pod_num": 1,
+            "single_pod_npu_num": 0,
+            "image": "vllm-ascend:latest",
+            "env": {
+                "env1": "value1"
+            },
+            "labels": {
+                "label1": "qwen-prefill"
+            },
+            "annotations": {
+                "anno1": "qwen-prefill"
+            }
+        },
+        "decode": {
+            "hardware_type": "module-910b-8",
+            "instance_count": 1,
+            "single_instance_pod_num": 1,
+            "single_pod_npu_num": 0,
+            "image": "vllm-ascend:latest",
+            "env": {
+                "env1": "value1"
+            },
+            "labels": {
+                "label1": "qwen-decode"
+            },
+            "annotations": {
+                "anno1": "qwen-decode"
+            }
+        },
+        "router": {
+            "hardware_type": "module-910b-8",
+            "instance_count": 1,
+            "single_instance_pod_num": 1,
+            "single_pod_npu_num": 0,
+            "image": "vllm-ascend:latest",
+            "env": {
+                "env1": "value1"
+            }
+        }
+    },
+    "engine_common_config": {
+        "deploy_type": "pd_separate", 
+        "engine_type": "vllm",
+        "serve_name": "qwen-service",
+        "model_path": "/model/qwen3_30B",
+        "prefill_dp_size": 2,
+        "prefill_tp_size": 1,
+        "decode_dp_size": 2,
+        "decode_tp_size": 1,
+        "enable_ep": false,
+        "server_port": 8080,
+        "dp_rpc_port": 10000
+    },
+    "prefill_engine_config": {
+    },
+    "decode_engine_config": {
+    },
+    "router_config": {
+      "port": 8000
+    }
+}

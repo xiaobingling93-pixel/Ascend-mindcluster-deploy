@@ -1,0 +1,22 @@
+{
+    "deploy_config": {
+        "namespace": "default",
+        "job_name": "qwen-union",
+        "infer_service_num": 1,
+        "prefill": {
+            "hardware_type": "module-910b-8",
+            "instance_count": 1,
+            "single_instance_pod_num": 1,
+            "single_pod_npu_num": 8,
+            "image": "vllm-ascend:latest"
+        }
+    },
+    "engine_common_config": {
+        "deploy_type": "union",
+        "engine_type": "vllm",
+        "model_path": "/model/qwen3_30B",
+        "prefill_dp_size": 1,
+        "prefill_tp_size": 8,
+        "server_port": 8000
+    }
+}

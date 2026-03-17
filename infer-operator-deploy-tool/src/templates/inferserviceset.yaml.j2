@@ -1,0 +1,26 @@
+apiVersion: mindcluster.huawei.com/v1
+kind: InferServiceSet
+metadata:
+  name: {{ job_name }}
+  namespace: {{ namespace }}
+spec:
+  replicas: {{ infer_service_num }}
+  template:
+    roles:
+    {% if deploy_type == 'pd_separate' %}
+    {% set role_name = 'prefill' %}
+    {% set role_config = prefill %}
+    {% include 'role.yaml.j2' %}
+
+    {% set role_name = 'decode' %}
+    {% set role_config = decode %}
+    {% include 'role.yaml.j2' %}
+
+    {% set role_name = 'router' %}
+    {% set role_config = router %}
+    {% include 'role.yaml.j2' %}
+    {% elif deploy_type == 'union' %}
+    {% set role_name = 'union' %}
+    {% set role_config = prefill %}
+    {% include 'role.yaml.j2' %}
+    {% endif %}
