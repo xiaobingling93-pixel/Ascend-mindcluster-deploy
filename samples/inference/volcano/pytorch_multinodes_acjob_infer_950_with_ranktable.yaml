@@ -4,6 +4,10 @@ metadata:
   name: default-infer-test-pytorch-npu
   labels:
     framework: pytorch
+  annotations:
+    sp-block: "8"
+    ra-block: "8"
+    huawei.com/scheduler-policy: "chip8-node8-ra64-sp"
 spec:
   schedulerName: volcano   # work when enableGangScheduling is true
   runPolicy:
@@ -53,9 +57,9 @@ spec:
                   name: ascendjob-port        # do not modify
               resources:
                 limits:
-                  huawei.com/npu: 2
+                  huawei.com/npu: 8
                 requests:
-                  huawei.com/npu: 2
+                  huawei.com/npu: 8
               volumeMounts:
                 - name: ascend-driver
                   mountPath: /usr/local/Ascend/driver
@@ -125,9 +129,9 @@ spec:
                   name: ascendjob-port        # do not modify
               resources:
                 limits:
-                  huawei.com/npu: 2
+                  huawei.com/npu: 8
                 requests:
-                  huawei.com/npu: 2
+                  huawei.com/npu: 8
               volumeMounts:
                 - name: ascend-driver
                   mountPath: /usr/local/Ascend/driver

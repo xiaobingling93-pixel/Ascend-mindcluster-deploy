@@ -4,6 +4,10 @@ metadata:
   name: resnetinfer1-1-deploy
   labels:
       app: infers
+  annotations:
+      sp-block: "8"
+      ra-block: "8"
+      huawei.com/scheduler-policy: "chip8-node8-ra64-sp"
 spec:
   replicas: 1
   selector:
@@ -32,9 +36,9 @@ spec:
               fieldPath: metadata.annotations['huawei.com/npu']              
         resources:
           requests:
-            huawei.com/npu: 1
+            huawei.com/npu: 8
           limits:
-            huawei.com/npu: 1             # The value should be the same as that of requests .
+            huawei.com/npu: 8             # The value should be the same as that of requests .
         volumeMounts:
         - name: slog
           mountPath: /var/log/npu/conf/slog/    #Log path

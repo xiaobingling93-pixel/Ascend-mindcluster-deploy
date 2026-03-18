@@ -6,6 +6,7 @@ metadata:
     framework: pytorch
   annotations:
     sp-block: "8"
+    ra-block: "8"
     huawei.com/schedule_policy: "chip8-node8-ra64-sp"
 spec:
   schedulerName: volcano   # work when enableGangScheduling is true

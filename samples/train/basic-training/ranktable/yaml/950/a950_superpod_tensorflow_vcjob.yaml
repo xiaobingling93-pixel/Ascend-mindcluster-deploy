@@ -19,6 +19,10 @@ metadata:
   labels:
     fault-scheduling: "force"
     ring-controller.atlas: ascend-npu
+  annotations:
+    sp-block: "8"
+    ra-block: "8"
+    huawei.com/scheduler-policy: "chip8-node8-ra64-sp"
 spec:
   minAvailable: 1                       # The value of minAvailable is 1 in a single-node scenario and N in an N-node distributed scenario.
   schedulerName: volcano                # Use the Volcano scheduler to schedule jobs.

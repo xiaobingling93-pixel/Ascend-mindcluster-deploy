@@ -6,6 +6,10 @@ metadata:
   labels:
     ring-controller.atlas: ascend-npu
     fault-scheduling: "force"
+  annotations:
+    sp-block: "8"
+    ra-block: "8"
+    huawei.com/scheduler-policy: "chip8-node8-ra64-sp"
 spec:
   minAvailable: 1                       # The value of minAvailable is 1 in a single-node scenario, only set as 1 when infer task
   schedulerName: volcano                # Use the Volcano scheduler to schedule jobs.
@@ -37,9 +41,9 @@ spec:
                   fieldPath: metadata.annotations['huawei.com/npu']               # The value must be the same as resources.requests.
             resources:
               requests:
-                huawei.com/npu: 1
+                huawei.com/npu: 8
               limits:
-                huawei.com/npu: 1          # The value must be consistent with that in requests.
+                huawei.com/npu: 8          # The value must be consistent with that in requests.
             volumeMounts:
               - name: localtime                  # The container time must be the same as the host time.
                 mountPath: /etc/localtime
