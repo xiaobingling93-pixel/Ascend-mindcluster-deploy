@@ -36,8 +36,8 @@ pip install -r requirements.txt
 
 1. 复制并修改配置文件
 ```bash
-cp config/user_config.json config/my_config.json
 # 根据需求编辑配置文件
+cp config/user_config.json config/my_config.json
 ```
 
 2. 验证配置文件格式
@@ -64,13 +64,13 @@ python main.py deploy --dry-run
 ### 2.4 删除应用
 
 ```bash
-# 删除指定名称的应用
+# 删除指定名称的应用，应用名取配置文件中的`deploy_config.job_name`字段。
 python main.py delete --app-name my-app
 
-# 在指定命名空间删除应用
+# 在指定命名空间删除应用，应用名取配置文件中的`deploy_config.job_name`字段。
 python main.py delete --app-name my-app --namespace my-namespace
 
-# 使用指定 kubeconfig 文件删除
+# 使用指定 kubeconfig 文件删除，应用名取配置文件中的`deploy_config.job_name`字段。
 python main.py delete --app-name my-app --kubeconfig /path/to/kubeconfig
 ```
 
@@ -97,7 +97,7 @@ python main.py delete --app-name my-app --kubeconfig /path/to/kubeconfig
 
 | 字段 | 类型 | 说明 | 是否必填 | 默认值 |
 |------|------|------|----------|--------|
-| hardware_type | string | 硬件类型，支持 module-910b-8, module-a3-16, module-a3-16-super-pod，根据实际节点上的accelerator-type填写 | 是 | - |
+| hardware_type | string | 硬件类型，支持 module-910b-8、module-a3-16、module-a3-16-super-pod，根据实际节点上的accelerator-type填写 | 是 | - |
 | instance_count | integer | 实例数量 | 否 | 1 |
 | single_instance_pod_num | integer | 单个实例的 Pod 数量 | 否 | 1 |
 | single_pod_npu_num | integer | 单个 Pod 的 NPU 数量 | 否 | 0 |
@@ -115,7 +115,7 @@ python main.py delete --app-name my-app --kubeconfig /path/to/kubeconfig
 |------|------|------|----------|--------|
 | deploy_type | string | 部署模式，支持 pd_separate（PD分离）或 union（PD混部） | 是 | - |
 | engine_type | string | 引擎类型，如 vllm | 是 | - |
-| serve_name | string | 服务名称 | 是 | - |
+| serve_name | string | 服务名称，将作为推理请求的模型名称 | 是 | - |
 | model_path | string | 模型文件路径 | 是 | - |
 | prefill_dp_size | integer | Prefill 阶段的 Data Parallelism 大小 | 否 | - |
 | prefill_tp_size | integer | Prefill 阶段的 Tensor Parallelism 大小 | 否 | - |
