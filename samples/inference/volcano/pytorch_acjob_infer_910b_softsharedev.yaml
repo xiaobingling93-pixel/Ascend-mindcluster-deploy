@@ -68,6 +68,8 @@ spec:
                   mountPath: /usr/local/Ascend/driver
                 - name: ascend-add-ons
                   mountPath: /usr/local/Ascend/add-ons
+                - name: dshm
+                  mountPath: /dev/shm
                 - name: localtime
                   mountPath: /etc/localtime
                 - name: libpreload # soft split dynamic library path
@@ -81,6 +83,9 @@ spec:
             - name: ascend-add-ons
               hostPath:
                 path: /usr/local/Ascend/add-ons
+            - name: dshm
+              emptyDir:
+                medium: Memory
             - name: localtime
               hostPath:
                 path: /etc/localtime
@@ -138,6 +143,8 @@ spec:
                   mountPath: /usr/local/Ascend/driver
                 - name: ascend-add-ons
                   mountPath: /usr/local/Ascend/add-ons
+                - name: dshm
+                  mountPath: /dev/shm
                 - name: localtime
                   mountPath: /etc/localtime
                 - name: libpreload # soft split dynamic library path
@@ -151,6 +158,9 @@ spec:
             - name: ascend-add-ons
               hostPath:
                 path: /usr/local/Ascend/add-ons
+            - name: dshm
+              emptyDir:
+                medium: Memory
             - name: localtime
               hostPath:
                 path: /etc/localtime
