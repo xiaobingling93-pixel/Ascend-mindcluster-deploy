@@ -24,6 +24,7 @@ metadata:
     jobID: mindie-ms-test        # uid of infer job, modify it according to your job
     ring-controller.atlas: ascend-910b
     fault-scheduling: force
+    fault-retry-times: "10000"
 spec:
   schedulerName: volcano   # work when enableGangScheduling is true
   runPolicy:
