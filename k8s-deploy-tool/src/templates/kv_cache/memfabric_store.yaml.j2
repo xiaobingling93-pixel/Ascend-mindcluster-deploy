@@ -31,7 +31,7 @@ spec:
         command: 
         - /bin/bash
         - -c
-        - source /usr/local/Ascend/ascend-toolkit/set_env.sh; source /usr/local/Ascend/nnal/atb/set_env.sh; python -m mf_adapter.launch_ascend_mf_store
+        - source /usr/local/Ascend/ascend-toolkit/set_env.sh; source /usr/local/Ascend/nnal/atb/set_env.sh; python -m memfabric_hybrid.launch_ascend_mf_store
         ports:
         - containerPort: {{ mf_store.container_port | default(9000) }}
           protocol: TCP

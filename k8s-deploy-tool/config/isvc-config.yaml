@@ -8,7 +8,7 @@ inference_service:                           # 推理服务配置，下属字段
     min_replicas: 1                          # 最小副本数，选填，默认值为1，当前要求大于0
     max_replicas: 1                          # 最大副本数，选填，默认值为1，当前要求必须等同于min_replicas的数量
     pod_num: 1                               # 实例pod数量，选填，默认值为1
-    image: "sglang:11.11.1"                  # 容器镜像，选填，如果不填，会使用runtime中配置的image
+    image: "lmsysorg/sglang:xxx"             # 容器镜像，选填，如果不填，会使用runtime中配置的image
     npu_num: 1                               # 每个容器中的npu数量，选填，默认值为1
     labels:                                  # labels、annotations、node_selector、env_vars均为选填，如果存在，会覆盖runtime中配置的对应字段，此处xxx,yyy无实际意义，用户可以删除
       xxx: yyy
@@ -27,7 +27,7 @@ inference_service:                           # 推理服务配置，下属字段
     min_replicas: 1                      
     max_replicas: 1
     pod_num: 1
-    image: "sglang:11.11.1"
+    image: "lmsysorg/sglang:xxx"
     npu_num: 1
 
     labels:
@@ -46,7 +46,7 @@ inference_service:                           # 推理服务配置，下属字段
   router:
     min_replicas: 1                           # 最小副本数，选填，默认值为1，当前要求大于0
     max_replicas: 1                           # 最大副本数，选填，默认值为1，要求大于等于
-    image: "sglang:11.11.1"                   # 容器镜像，选填，如果不填，会使用runtime中配
+    image: "lmsysorg/sglang:xxx"              # 容器镜像，选填，如果不填，会使用runtime中配
     labels:                                   # labels、annotations、node_selector、env_vars均为选填，如果存在，会覆盖runtime中配置的对应字段，此处xxx,yyy无实际意义，用户可以删除
       xxx: yyy
     annotations:
@@ -55,7 +55,7 @@ inference_service:                           # 推理服务配置，下属字段
       xxx: yyy  
 
 mf_store:
-  image: "sglang:test"                         # mf_store镜像，选填，如果不填，会使用模板中的image
+  image: "lmsysorg/sglang:xxx"                 # mf_store镜像，选填，如果不填，会使用模板中的image, 要求镜像中memfabric_hybrid pip包的版本大于1.0.7
   replicas: 1                                  # mf_store副本数，选填，默认值为1，当前要求仅为1
   container_port: 9000                         # mf_store服务端口，选填，默认值为9000
   env_vars:                                    # node_selector、env_vars均为选填，如果存在，会覆盖模板中配置的对应字段，此处xxx,yyy无实际意义，用户可以删除
